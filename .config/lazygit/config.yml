@@ -1,0 +1,18 @@
+gui:
+  nerdFontsVersion: "3"
+  theme:
+    activeBorderColor:
+      - blue
+      - bold
+git:
+  autoFetch: false
+  autoRefresh: false
+  fetchAll: false
+  notARepository: 'quit'
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+os:
+  edit: "$HOME/.config/scripts/tmux-nvim-open.sh {{filename}}"
+  editAtLineAndWait: "$HOME/.config/scripts/tmux-nvim-open.sh {{filename}}"
+  editInTerminal: false
