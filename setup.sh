@@ -77,14 +77,17 @@ sleep 10
 
 # Add symlinks
 echo "Copying config files..."
-cp -rf ~/dotfiles/.zshrc ~/.zshrc
-cp -rf ~/dotfiles/.config/lazygit ~/.config/lazygit
-cp -rf ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
-cp -rf ~/dotfiles/.config/scripts ~/.config/scripts
-cp -rf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
-cp -rf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
-mkdir -p ~/.config/tmux && cp -rf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-cp -rf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
+ln -svf ~/dotfiles/.zshrc ~/.zshrc
+ln -svf ~/dotfiles/.config/lazygit ~/.config/lazygit
+ln -svf ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
+ln -svf ~/dotfiles/.config/scripts ~/.config/scripts
+rm -rf ~/.config/nvim/lua/config
+ln -svf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
+rm -rf ~/.config/nvim/lua/plugins
+ln -svf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
+ln -svf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+ln -svf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
+echo "Finished copying files..."
 
 sleep 10
 
@@ -99,7 +102,10 @@ nvim --headless "+Lazy! sync" +qa
 sleep 10
 
 # Install Tmux plugin manager
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+  echo "$DIRECTORY does not exist."
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
 tmux start-server
 tmux new-session -d
 sleep 10
