@@ -59,18 +59,16 @@ sleep 1
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "Installing Oh My Zsh..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  sleep 1
 fi
-
-sleep 1
 
 # Install LazyVim
 if [ ! -d "$HOME/.config/nvim" ]; then
   echo "Installing LazyVim..."
   git clone https://github.com/LazyVim/starter ~/.config/nvim
   rm -rf ~/.config/nvim/.git
+  sleep 1
 fi
-
-sleep 1
 
 # Add symlinks
 echo "Copying config files..."
@@ -89,22 +87,28 @@ echo "Finished copying files..."
 sleep 1
 
 # Install LazyVim packages
-nvim --headless "+Lazy! sync" +qa
-
-sleep 1
+if [ ! -d ~/.local/share/nvim/lazy ]; then
+  echo "Installing LazyVim packages..."
+  nvim --headless "+Lazy! sync" +qa
+  sleep 1
+fi
 
 # Install Tmux plugin manager
 if [ ! -d ~/.tmux/plugins/tpm ]; then
-  echo "$DIRECTORY does not exist."
+  echo "Installing Tmux Plugin Manager..."
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  sleep 1
 fi
-tmux start-server
-tmux new-session -d
-sleep 1
-eval "$(~/.tmux/plugins/tpm/scripts/install_plugins.sh)"
-tmux kill-server
 
-sleep 1
+if [ ! -d ~/.tmux/plugins/vim-tmux-navigator ]; then
+  echo "Installing TPM Plugins"
+  tmux start-server
+  tmux new-session -d
+  sleep 1
+  eval "$(~/.tmux/plugins/tpm/scripts/install_plugins.sh)"
+  tmux kill-server
+  sleep 1
+fi
 
 # Change default shell to zsh. This should be last step.
 if [ "$SHELL" != "$(which zsh)" ]; then
