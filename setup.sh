@@ -22,25 +22,27 @@ echo "Y\n" | sudo apt-get --purge remove neovim
 
 sleep 1
 
-# Install Homebrew packages
-brew install fzf \
-  zsh \
-  powerlevel10k \
-  zsh-syntax-highlighting \
-  fd \
-  ripgrep \
-  tmux \
-  neovim-remote \
-  neovim \
-  delta \
-  zoxide \
-  joshmedeski/sesh/sesh \
-  gnu-sed \
-  luarocks \
-  imagemagick \
-  bottom \
-  lazygit \
-  nvm
+# Install Homebrew packages if they are not yet installed
+brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
+
+brew_install zsh
+brew_install powerlevel10k
+brew_install zsh-syntax-highlighting
+brew_install tmux
+brew_install neovim
+brew_install fzf
+brew_install fd
+brew_install ripgrep
+brew_install delta
+brew_install joshmedeski/sesh/sesh
+brew_install gnu-sed
+brew_install luarocks
+brew_install imagemagick
+brew_install bottom
+brew_install lazygit
+brew_install nvm
+brew_install zoxide
+brew_install neovim-remote
 
 sleep 1
 
