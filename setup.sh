@@ -25,6 +25,7 @@ sleep 1
 # Install Homebrew packages if they are not yet installed
 brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
 
+echo "Installing Homebrew packages"
 brew_install zsh
 brew_install powerlevel10k
 brew_install zsh-syntax-highlighting
@@ -57,25 +58,28 @@ fi
 sleep 1
 
 # Install Oh my zsh
+echo "Installing Oh my zsh..."
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 sleep 1
 
 # Install LazyVim
+echo "Installing LazyVim..."
 git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
 
 sleep 1
 
 # Add symlinks
-ln -svf ~/dotfiles/.zshrc ~/.zshrc
-ln -svf ~/dotfiles/.config/lazygit ~/.config/lazygit
-ln -svf ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
-ln -svf ~/dotfiles/.config/scripts ~/.config/scripts
-ln -svf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
-ln -svf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
-ln -svf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-ln -svf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
+echo "Copying config files..."
+cp -rf ~/dotfiles/.zshrc ~/.zshrc
+cp -rf ~/dotfiles/.config/lazygit ~/.config/lazygit
+cp -rf ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
+cp -rf ~/dotfiles/.config/scripts ~/.config/scripts
+cp -rf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
+cp -rf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
+cp -rf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+cp -rf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 
 sleep 1
 
