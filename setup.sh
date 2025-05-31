@@ -100,7 +100,7 @@ if [ ! -d ~/.tmux/plugins/tpm ]; then
   sleep 1
 fi
 
-if [ ! -d ~/.tmux/plugins/vim-tmux-navigator ]; then
+if [ ! -d ~/.config/tmux/plugins/tpm ]; then
   echo "Installing TPM Plugins"
   tmux start-server
   tmux new-session -d
