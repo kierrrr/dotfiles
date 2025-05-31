@@ -4,7 +4,10 @@
 if ! command -v brew &>/dev/null; then
   echo "Homebrew not found. Installing..."
 
-  git clone https://github.com/Homebrew/brew ~/homebrew
+  if [ ! -d "$HOME/homebrew" ]; then
+    echo "Cloning Homebrew..."
+    git clone https://github.com/Homebrew/brew ~/homebrew
+  fi
 
   eval "$(~/homebrew/bin/brew shellenv)"
   brew update --force --quiet
@@ -12,12 +15,13 @@ if ! command -v brew &>/dev/null; then
 
   sleep 1
 
-  echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
-  echo 'export PATH="$PATH:/homebrew/bin"' >>~/.zprofile
+  # Add eval "$(~/homebrew/bin/brew shellenv)" to .zprofile if it doesn't exist in the file
+  grep -qxF 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
 
-  # echo 'export HOMEBREW_PREFIX=~/usr/local' >>~/.zprofile
-  # echo “export PATH=$PATH:~/homebrew/bin:HOMEBREW_PREFIX/bin” >>~/.zprofile
-  echo "Finished Installing Homebrew"
+  # Add eval "export PATH="$PATH:/homebrew/bin"" to .zprofile if it doesn't exist in the file
+  grep -qxF 'export PATH="$PATH:/homebrew/bin"' ~/.zprofile || echo 'export PATH="$PATH:/homebrew/bin"' >>~/.zprofile
+
+  echo "Finished installing Homebrew"
 fi
 
 # Remove default Ubuntu Neovim
@@ -42,7 +46,7 @@ brew_install joshmedeski/sesh/sesh
 brew_install gnu-sed
 brew_install luarocks
 brew_install imagemagick
-brew_install bottom
+brew_install btop
 brew_install lazygit
 brew_install nvm
 brew_install zoxide
