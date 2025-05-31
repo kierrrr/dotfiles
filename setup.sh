@@ -23,7 +23,7 @@ fi
 # Remove default Ubuntu Neovim
 echo "Y\n" | sudo apt-get --purge remove neovim
 
-sleep 10
+sleep 1
 
 # Install Homebrew packages if they are not yet installed
 brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
@@ -47,33 +47,26 @@ brew_install lazygit
 brew_install nvm
 brew_install zoxide
 brew_install neovim-remote
-
 echo "Finished installing Homebrew packages"
 
-sleep 10
-
-# Change default shell to zsh
-if [ "$SHELL" != "$(which zsh)" ]; then
-  echo "Changing default shell to zsh..."
-  source /etc/zsh/zshenv
-  sudo chsh -s "$(which zsh)" ubuntu
-  zsh
-fi
-
-sleep 10
+sleep 1
 
 # Install Oh my zsh
-echo "Installing Oh my zsh..."
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Installing Oh My Zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
 
-sleep 10
+sleep 1
 
 # Install LazyVim
-echo "Installing LazyVim..."
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
+if [ ! -d "$HOME/.config/nvim" ]; then
+  echo "Installing LazyVim..."
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+  rm -rf ~/.config/nvim/.git
+fi
 
-sleep 10
+sleep 1
 
 # Add symlinks
 echo "Copying config files..."
@@ -89,17 +82,12 @@ ln -svf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
 ln -svf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 echo "Finished copying files..."
 
-sleep 10
-
-# Source Zshrc
-source ~/.zshrc
-
-sleep 10
+sleep 1
 
 # Install LazyVim packages
 nvim --headless "+Lazy! sync" +qa
 
-sleep 10
+sleep 1
 
 # Install Tmux plugin manager
 if [ ! -d ~/.tmux/plugins/tpm ]; then
@@ -108,6 +96,16 @@ if [ ! -d ~/.tmux/plugins/tpm ]; then
 fi
 tmux start-server
 tmux new-session -d
-sleep 10
+sleep 1
 eval "$(~/.tmux/plugins/tpm/scripts/install_plugins.sh)"
 tmux kill-server
+
+sleep 1
+
+# Change default shell to zsh. This should be last step.
+if [ "$SHELL" != "$(which zsh)" ]; then
+  echo "Changing default shell to zsh..."
+  source /etc/zsh/zshenv
+  sudo chsh -s "$(which zsh)" ubuntu
+  zsh
+fi
