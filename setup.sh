@@ -80,6 +80,7 @@ rm -rf ~/.config/nvim/lua/config
 ln -svf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
 rm -rf ~/.config/nvim/lua/plugins
 ln -svf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
+mkdir ~/.config/tmux/
 ln -svf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
 ln -svf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 echo "Finished copying files..."
