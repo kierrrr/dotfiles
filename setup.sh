@@ -51,7 +51,14 @@ brew_install lazygit
 brew_install nvm
 brew_install zoxide
 brew_install neovim-remote
+brew_install rust
+brew_install rustup
 echo "Finished installing Homebrew packages"
+
+sleep 1
+
+# Install Rust nightly
+rustup toolchain install nightly
 
 sleep 1
 
