@@ -56,6 +56,3 @@ keymap.set({ "i" }, "<M-h>", "<Left>") -- h
 keymap.set({ "i" }, "<M-j>", "<Down>") -- j
 keymap.set({ "i" }, "<M-k>", "<Up>") -- k
 keymap.set({ "i" }, "<M-l>", "<Right>") -- l
-
--- Rename value
-keymap.set("n", "<leader>rn", ":IncRename ")

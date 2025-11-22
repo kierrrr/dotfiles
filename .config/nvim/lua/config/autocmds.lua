@@ -4,11 +4,17 @@
 
 -- vim.notify("this is from autocmd")
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "json", "jsonc" },
-  callback = function()
-    vim.wo.spell = false
-    vim.wo.conceallevel = 0
-  end,
+	pattern = { "json", "jsonc" },
+	callback = function()
+		vim.wo.spell = false
+		vim.wo.conceallevel = 0
+	end,
+})
+
+-- Set GraphQL LSP for Nadel files - Atlassian derived GraphQL schemas
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufRead", "BufNewFile" }, {
+	pattern = "*.nadel",
+	command = "set filetype=graphql",
 })
 
 -- vim.api.nvim_create_user_command("RunTSCQuickfix", function()
