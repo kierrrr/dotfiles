@@ -16,7 +16,7 @@ if ! command -v brew &>/dev/null; then
   sleep 1
 
   # Add eval "$(~/homebrew/bin/brew shellenv)" to .zprofile if it doesn't exist in the file
-  grep -qxF 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
+  # grep -qxf 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
 
   # Add eval "export PATH="$PATH:/homebrew/bin"" to .zprofile if it doesn't exist in the file
   grep -qxF 'export PATH="$PATH:/homebrew/bin"' ~/.zprofile || echo 'export PATH="$PATH:/homebrew/bin"' >>~/.zprofile
@@ -36,7 +36,6 @@ echo "Installing Homebrew packages"
 brew_install zsh
 brew_install powerlevel10k
 brew_install zsh-syntax-highlighting
-brew_install tmux
 brew_install neovim
 brew_install fzf
 brew_install fd
@@ -53,7 +52,6 @@ brew_install zoxide
 brew_install neovim-remote
 brew_install rust
 brew_install rustup
-echo "Finished installing Homebrew packages"
 
 sleep 1
 
@@ -61,6 +59,22 @@ sleep 1
 rustup toolchain install nightly
 
 sleep 1
+
+# Install Tmux and its dependencies
+if ! brew ls --versions tmux; then
+  if command -v openssl &>/dev/null; then
+    # OpenSSL is a dependency of Tmux
+    # Use installed OpenSSL package if it exists
+    echo "OpenSSL package exists"
+    brew_install libevent
+    brew_install ncurses
+    brew_install utf8proc
+    brew install tmux --ignore-dependencies
+  else
+    brew_install tmux
+  fi
+fi
+echo "Finished installing Homebrew packages"
 
 # Install Oh my zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
