@@ -29,14 +29,23 @@ echo "Y\n" | sudo apt-get --purge remove neovim
 
 sleep 1
 
+if ! command -v nvim &>/dev/null; then
+  sudo apt install neovim
+fi
+
+sleep 1
+
 # Install Homebrew packages if they are not yet installed
 brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
 
 echo "Installing Homebrew packages"
-brew_install zsh
+
+if ! command -v zsh &>/dev/null; then
+  brew_install zsh
+  zsh
+fi
 brew_install powerlevel10k
 brew_install zsh-syntax-highlighting
-brew_install neovim
 brew_install fzf
 brew_install fd
 brew_install ripgrep
@@ -50,25 +59,27 @@ brew_install lazygit
 brew_install nvm
 brew_install zoxide
 brew_install neovim-remote
-brew_install rust
-brew_install rustup
+# brew_install rust
+# brew_install rustup
 
 sleep 1
 
 # Install Rust nightly
-rustup toolchain install nightly
+# rustup toolchain install nightly
 
 sleep 1
+
+brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
 
 # Install Tmux and its dependencies
 if ! brew ls --versions tmux; then
   if command -v openssl &>/dev/null; then
-    # OpenSSL is a dependency of Tmux
-    # Use installed OpenSSL package if it exists
-    echo "OpenSSL package exists"
-    brew_install libevent
+    # openssl is a dependency of tmux
+    # use installed openssl package if it exists
+    echo "openssl package exists"
     brew_install ncurses
     brew_install utf8proc
+    brew install libevent --ignore-dependencies
     brew install tmux --ignore-dependencies
   else
     brew_install tmux
