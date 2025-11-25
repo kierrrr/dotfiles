@@ -80,3 +80,8 @@ eval "$(fzf --zsh)"
 source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
 
 eval "$(zoxide init zsh)"
+
+[[ -n "$ZSH_VERSION" ]] && source "/Users/klomugdang/.afm-bin-path-manager.zsh"
+
+[[ -n "$BASH_VERSION" ]] && source "/Users/klomugdang/.afm-bin-path-manager.bash"
+if [ -f "$HOME/.afm-bin-path-manager.zsh" ]; then source "$HOME/.afm-bin-path-manager.zsh"; fi
