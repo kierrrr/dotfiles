@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git reset --hard && git clean -fd
+
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
   echo "Homebrew not found. Installing..."
@@ -30,49 +32,44 @@ echo "Y\n" | sudo apt-get --purge remove neovim
 sleep 1
 
 # Install Homebrew packages if they are not yet installed
-brew_install() { if brew ls --versions "$1" >/dev/null; then :; else brew install --ignore-dependencies "$1"; fi; }
+brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
 
-pkgs=(
-  zsh
-  powerlevel10k
-  zsh-syntax-highlighting
-  tmux
-  neovim
-  fzf
-  fd
-  ripgrep
-  delta
-  joshmedeski/sesh/sesh
-  gnu-sed
-  luarocks
-  imagemagick
-  btop
-  lazygit
-  nvm
-  zoxide
-  neovim-remote
-  rust
-  rustup
-)
-
-mapfile -t deps < <(brew deps --union "${pkgs[@]}" | grep -vx curl || true)
-
-declare -A seen=()
-all=()
-for p in "${pkgs[@]}" "${deps[@]}"; do
-  [[ -n "${p}" && -z "${seen[$p]:-}" ]] && all+=("$p") && seen["$p"]=1
-done
-
-echo "Will install:"
-printf '  %s\n' "${all[@]}"
-
-for p in "${all[@]}"; do
-  brew_install "$p"
-done
+echo "Installing Homebrew packages"
+brew_install zsh
+brew_install powerlevel10k
+brew_install zsh-syntax-highlighting
+brew_install tmux
+brew_install neovim
+brew_install fzf
+brew_install fd
+brew_install ripgrep
+brew_install delta
+brew_install joshmedeski/sesh/sesh
+brew_install gnu-sed
+brew_install luarocks
+brew_install imagemagick
+brew_install btop
+brew_install lazygit
+brew_install nvm
+brew_install zoxide
+brew_install neovim-remote
+brew_install rust
+brew_install rustup
+echo "Finished installing Homebrew packages"
 
 sleep 1
 
-# Install Rust nightly
+echo "Reinstalling curl"
+brew uninstall --ignore-dependencies curl
+
+sleep 1
+
+sudo apt-get install curl
+
+sleep 1
+
+echo "Installing Rust nightly"
+
 rustup toolchain install nightly
 
 sleep 1
@@ -91,6 +88,8 @@ if [ ! -d "$HOME/.config/nvim" ]; then
   rm -rf ~/.config/nvim/.git
   sleep 1
 fi
+
+git reset --hard && git clean -fd
 
 # Add symlinks
 echo "Copying config files..."
@@ -140,3 +139,5 @@ if [ "$SHELL" != "$(which zsh)" ]; then
   sudo chsh -s "$(which zsh)" ubuntu
   zsh
 fi
+
+git reset --hard && git clean -fd
