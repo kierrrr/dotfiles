@@ -93,17 +93,14 @@ git reset --hard && git clean -fd
 
 # Add symlinks
 echo "Copying config files..."
-ln -svf ~/dotfiles/.zshrc ~/.zshrc
-ln -svf ~/dotfiles/.config/lazygit ~/.config/lazygit
-ln -svf ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
-ln -svf ~/dotfiles/.config/scripts ~/.config/scripts
-rm -rf ~/.config/nvim/lua/config
-ln -svf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
-rm -rf ~/.config/nvim/lua/plugins
-ln -svf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
-mkdir ~/.config/tmux/
-ln -svf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-ln -svf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
+cp -fL ~/dotfiles/.zshrc ~/.zshrc
+rm -rf ~/.config/lazygit && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/lazygit ~/.config/lazygit
+mkdir -p ~/.config/nvim && cp -fL ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
+rm -rf ~/.config/scripts && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/scripts ~/.config/scripts
+rm -rf ~/.config/nvim/lua/config && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
+rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
+mkdir -p ~/.config/tmux && cp -fL ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+cp -fL ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 echo "Finished copying files..."
 
 sleep 1
