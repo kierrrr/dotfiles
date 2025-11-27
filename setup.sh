@@ -16,7 +16,7 @@ if ! command -v brew &>/dev/null; then
   sleep 1
 
   # Add eval "$(~/homebrew/bin/brew shellenv)" to .zprofile if it doesn't exist in the file
-  # grep -qxf 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
+  grep -qxF 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
 
   # Add eval "export PATH="$PATH:/homebrew/bin"" to .zprofile if it doesn't exist in the file
   grep -qxF 'export PATH="$PATH:/homebrew/bin"' ~/.zprofile || echo 'export PATH="$PATH:/homebrew/bin"' >>~/.zprofile
@@ -29,63 +29,53 @@ echo "Y\n" | sudo apt-get --purge remove neovim
 
 sleep 1
 
-if ! command -v nvim &>/dev/null; then
-  sudo apt install neovim
-fi
-
-sleep 1
-
 # Install Homebrew packages if they are not yet installed
-brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
+brew_install() { if brew ls --versions "$1" >/dev/null; then :; else brew install --ignore-dependencies "$1"; fi; }
 
-echo "Installing Homebrew packages"
-
-if ! command -v zsh &>/dev/null; then
-  brew_install zsh
+pkgs=(
   zsh
-fi
-brew_install powerlevel10k
-brew_install zsh-syntax-highlighting
-brew_install fzf
-brew_install fd
-brew_install ripgrep
-brew_install delta
-brew_install joshmedeski/sesh/sesh
-brew_install gnu-sed
-brew_install luarocks
-brew_install imagemagick
-brew_install btop
-brew_install lazygit
-brew_install nvm
-brew_install zoxide
-brew_install neovim-remote
-# brew_install rust
-# brew_install rustup
+  powerlevel10k
+  zsh-syntax-highlighting
+  tmux
+  neovim
+  fzf
+  fd
+  ripgrep
+  delta
+  joshmedeski/sesh/sesh
+  gnu-sed
+  luarocks
+  imagemagick
+  btop
+  lazygit
+  nvm
+  zoxide
+  neovim-remote
+  rust
+  rustup
+)
+
+mapfile -t deps < <(brew deps --union "${pkgs[@]}" | grep -vx curl || true)
+
+declare -A seen=()
+all=()
+for p in "${pkgs[@]}" "${deps[@]}"; do
+  [[ -n "${p}" && -z "${seen[$p]:-}" ]] && all+=("$p") && seen["$p"]=1
+done
+
+echo "Will install:"
+printf '  %s\n' "${all[@]}"
+
+for p in "${all[@]}"; do
+  brew_install "$p"
+done
 
 sleep 1
 
 # Install Rust nightly
-# rustup toolchain install nightly
+rustup toolchain install nightly
 
 sleep 1
-
-brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
-
-# Install Tmux and its dependencies
-if ! brew ls --versions tmux; then
-  if command -v openssl &>/dev/null; then
-    # openssl is a dependency of tmux
-    # use installed openssl package if it exists
-    echo "openssl package exists"
-    brew_install ncurses
-    brew_install utf8proc
-    brew install libevent --ignore-dependencies
-    brew install tmux --ignore-dependencies
-  else
-    brew_install tmux
-  fi
-fi
-echo "Finished installing Homebrew packages"
 
 # Install Oh my zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
