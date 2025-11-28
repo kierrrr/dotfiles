@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git reset --hard && git clean -fd
+cd ~/dotfiles && git reset --hard && git clean -fd && cd -
 
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
@@ -89,8 +89,6 @@ if [ ! -d "$HOME/.config/nvim" ]; then
   sleep 1
 fi
 
-git reset --hard && git clean -fd
-
 # Add symlinks
 echo "Copying config files..."
 cp -fL ~/dotfiles/.zshrc ~/.zshrc
@@ -137,4 +135,4 @@ if [ "$SHELL" != "$(which zsh)" ]; then
   zsh
 fi
 
-git reset --hard && git clean -fd
+cd ~/dotfiles && git reset --hard && git clean -fd && cd -
