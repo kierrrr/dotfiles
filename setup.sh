@@ -53,6 +53,7 @@ brew_install lazygit
 brew_install nvm
 brew_install zoxide
 brew_install neovim-remote
+brew_install tree-sitter-cli
 # brew_install rust
 # brew_install rustup
 echo "Finished installing Homebrew packages"
