@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ~/dotfiles && git reset --hard && git clean -fd && cd -
+
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
   echo "Homebrew not found. Installing..."
@@ -16,7 +18,7 @@ if ! command -v brew &>/dev/null; then
   sleep 1
 
   # Add eval "$(~/homebrew/bin/brew shellenv)" to .zprofile if it doesn't exist in the file
-  # grep -qxf 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
+  grep -qxF 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
 
   # Add eval "export PATH="$PATH:/homebrew/bin"" to .zprofile if it doesn't exist in the file
   grep -qxF 'export PATH="$PATH:/homebrew/bin"' ~/.zprofile || echo 'export PATH="$PATH:/homebrew/bin"' >>~/.zprofile
@@ -29,23 +31,15 @@ echo "Y\n" | sudo apt-get --purge remove neovim
 
 sleep 1
 
-if ! command -v nvim &>/dev/null; then
-  sudo apt install neovim
-fi
-
-sleep 1
-
 # Install Homebrew packages if they are not yet installed
 brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
 
 echo "Installing Homebrew packages"
-
-if ! command -v zsh &>/dev/null; then
-  brew_install zsh
-  zsh
-fi
+brew_install zsh
 brew_install powerlevel10k
 brew_install zsh-syntax-highlighting
+brew_install tmux
+brew_install neovim
 brew_install fzf
 brew_install fd
 brew_install ripgrep
@@ -61,31 +55,24 @@ brew_install zoxide
 brew_install neovim-remote
 # brew_install rust
 # brew_install rustup
+echo "Finished installing Homebrew packages"
 
 sleep 1
 
-# Install Rust nightly
+echo "Reinstalling curl"
+brew uninstall --ignore-dependencies curl
+
+sleep 1
+
+sudo apt-get install curl
+
+# sleep 1
+
+# echo "Installing Rust nightly"
+#
 # rustup toolchain install nightly
 
 sleep 1
-
-brew_install() { if brew ls --versions "$1"; then true; else brew install "$1"; fi; }
-
-# Install Tmux and its dependencies
-if ! brew ls --versions tmux; then
-  if command -v openssl &>/dev/null; then
-    # openssl is a dependency of tmux
-    # use installed openssl package if it exists
-    echo "openssl package exists"
-    brew_install ncurses
-    brew_install utf8proc
-    brew install libevent --ignore-dependencies
-    brew install tmux --ignore-dependencies
-  else
-    brew_install tmux
-  fi
-fi
-echo "Finished installing Homebrew packages"
 
 # Install Oh my zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -104,17 +91,14 @@ fi
 
 # Add symlinks
 echo "Copying config files..."
-ln -svf ~/dotfiles/.zshrc ~/.zshrc
-ln -svf ~/dotfiles/.config/lazygit ~/.config/lazygit
-ln -svf ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
-ln -svf ~/dotfiles/.config/scripts ~/.config/scripts
-rm -rf ~/.config/nvim/lua/config
-ln -svf ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
-rm -rf ~/.config/nvim/lua/plugins
-ln -svf ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
-mkdir ~/.config/tmux/
-ln -svf ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-ln -svf ~/dotfiles/.p10k.zsh ~/.p10k.zsh
+cp -fL ~/dotfiles/.zshrc ~/.zshrc
+rm -rf ~/.config/lazygit && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/lazygit ~/.config/lazygit
+mkdir -p ~/.config/nvim && cp -fL ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
+rm -rf ~/.config/scripts && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/scripts ~/.config/scripts
+rm -rf ~/.config/nvim/lua/config && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
+rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
+mkdir -p ~/.config/tmux && cp -fL ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+cp -fL ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 echo "Finished copying files..."
 
 sleep 1
@@ -150,3 +134,5 @@ if [ "$SHELL" != "$(which zsh)" ]; then
   sudo chsh -s "$(which zsh)" ubuntu
   zsh
 fi
+
+cd ~/dotfiles && git reset --hard && git clean -fd && cd -
