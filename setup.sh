@@ -136,4 +136,7 @@ if [ "$SHELL" != "$(which zsh)" ]; then
   zsh
 fi
 
+# Set nvim as the default editor for git
+git config --global core.editor "nvim"
+
 cd ~/dotfiles && git reset --hard && git clean -fd && cd -

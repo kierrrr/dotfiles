@@ -81,6 +81,9 @@ source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
 
 eval "$(zoxide init zsh)"
 
+# Set nvim as the default EDITOR
+export EDITOR=nvim
+
 [[ -n "$ZSH_VERSION" ]] && source "/Users/klomugdang/.afm-bin-path-manager.zsh"
 
 [[ -n "$BASH_VERSION" ]] && source "/Users/klomugdang/.afm-bin-path-manager.bash"
