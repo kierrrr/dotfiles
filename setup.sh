@@ -44,7 +44,7 @@ brew_install fzf
 brew_install fd
 brew_install ripgrep
 brew_install delta
-brew_install joshmedeski/sesh/sesh
+brew_install sesh
 brew_install gnu-sed
 brew_install luarocks
 brew_install imagemagick
