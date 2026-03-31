@@ -98,7 +98,7 @@ rm -rf ~/.config/lazygit && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/lazy
 # Copy custom scripts
 rm -rf ~/.config/scripts && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/scripts ~/.config/scripts
 # Copy NVIM config
-mkdir -p ~/.config/nvim && cp -fL ~/dotfiles/.config/nvim/lazyvim.json ~/.config/nvim/lazyvim.json
+mkdir -p ~/.config/nvim
 rm -rf ~/.config/nvim/lua/config && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
 rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
 # Copy Television config
