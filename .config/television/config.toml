@@ -15,7 +15,7 @@
 
 # General settings
 # ----------------------------------------------------------------------------
-tick_rate = 50
+tick_rate = 60
 default_channel = "files"
 # Shell settings
 # --------------
@@ -48,7 +48,7 @@ global_history = false
 # └─────────────────────────┘
 ui_scale = 100
 # What orientation should tv be (landscape or portrait)
-orientation = "landscape"
+orientation = "portrait"
 # The theme to use for the UI
 # A list of builtin themes can be found in the `themes` directory of the television
 # repository. You may also create your own theme by creating a new file in a `themes`
@@ -59,7 +59,7 @@ theme = "tokyonight"
 # Each feature can have its own configuration section
 [ui.input_bar]
 # Where to place the input bar in the UI (top or bottom)
-position = "top"
+position = "bottom"
 # The input prompt string (defaults to ">" if not specified)
 prompt = ">"
 # header = "{}"
