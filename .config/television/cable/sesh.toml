@@ -4,7 +4,7 @@ description = "Session manager integrating tmux sessions, zoxide directories, an
 requirements = [ "sesh", "fd",]
 
 [ui.preview_panel]
-size = 70
+size = 75
 
 [source]
 command = [ "sesh list -t --icons", "sesh list --icons", "fd -H -t d -E .Trash .",]
