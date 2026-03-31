@@ -3,6 +3,9 @@ name = "wt-search"
 description = "Find worktrees to create sessions with"
 requirements = [ "git" ]
 
+[ui]
+orientation = "portrait"
+
 [source]
 command = "git worktree list --porcelain | grep '^worktree' | cut -d' ' -f2-"
 display = "{split:/:-1..}"
