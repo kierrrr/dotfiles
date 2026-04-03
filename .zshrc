@@ -83,16 +83,3 @@ eval "$(zoxide init zsh)"
 
 # Set nvim as the default EDITOR
 export EDITOR=nvim
-
-# Change cursor based on vim mode
-function zle-keymap-select {
-  if [[ $KEYMAP == vicmd ]]; then
-    printf '\e[2 q'  # Visual mode: steady block (█)
-  else
-    printf '\e[6 q'  # Insert mode: steady beam (|)
-  fi
-}
-zle -N zle-keymap-select
-
-# Set the initial cursor
-printf '\e[6 q'  # Insert mode: steady beam (|)
