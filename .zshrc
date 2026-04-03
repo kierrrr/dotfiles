@@ -84,7 +84,15 @@ eval "$(zoxide init zsh)"
 # Set nvim as the default EDITOR
 export EDITOR=nvim
 
-[[ -n "$ZSH_VERSION" ]] && source "/Users/klomugdang/.afm-bin-path-manager.zsh"
+# Change cursor based on vim mode
+function zle-keymap-select {
+  if [[ $KEYMAP == vicmd ]]; then
+    printf '\e[2 q'  # Visual mode: steady block (█)
+  else
+    printf '\e[6 q'  # Insert mode: steady beam (|)
+  fi
+}
+zle -N zle-keymap-select
 
-[[ -n "$BASH_VERSION" ]] && source "/Users/klomugdang/.afm-bin-path-manager.bash"
-if [ -f "$HOME/.afm-bin-path-manager.zsh" ]; then source "$HOME/.afm-bin-path-manager.zsh"; fi
+# Set the initial cursor
+printf '\e[6 q'  # Insert mode: steady beam (|)
