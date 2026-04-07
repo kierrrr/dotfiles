@@ -79,4 +79,10 @@ return {
 			},
 		},
 	},
+	{
+		"neovim/nvim-lspconfig",
+		opts = {
+			inlay_hints = { enabled = false }, -- Disable ghost types being displayed
+		},
+	},
 }
