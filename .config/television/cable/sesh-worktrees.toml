@@ -7,7 +7,7 @@ requirements = [ "git" ]
 orientation = "portrait"
 
 [source]
-command = "git worktree list --porcelain | grep '^worktree' | cut -d' ' -f2-"
+command = '''git worktree list --porcelain | grep '^worktree' | cut -d' ' -f2- | tail -n +2 | grep -vf <(sesh list -t | awk -F'/' '{print "/" $1 "$"}')'''
 display = "{split:/:-1..}"
 
 [preview]
@@ -20,4 +20,3 @@ enter = "actions:find-worktree-directory"
 description = "Find worktree directory"
 command = "tv wt-sesh '{}'"
 mode = "execute"
-
