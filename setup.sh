@@ -144,4 +144,17 @@ fi
 # Set nvim as the default editor for git
 git config --global core.editor "nvim"
 
+# Update rovodev config to add on_complete event hook
+ROVODEV_CONFIG="$HOME/.rovodev/config.yml"
+if [ -f "$ROVODEV_CONFIG" ]; then
+  echo "Updating rovodev event hooks config..."
+  if grep -q "^eventHooks:" "$ROVODEV_CONFIG" && grep -q "  events: \[\]" "$ROVODEV_CONFIG"; then
+    sed -i.bak '/^eventHooks:/,/^[^ ]/ s/  events: \[\]/  events:\n  - name: on_complete\n    commands:\n    - command: tmux set-option @jmux-attention 1 2>\/dev\/null || true/' "$ROVODEV_CONFIG"
+    rm -f "${ROVODEV_CONFIG}.bak"
+    echo "rovodev config updated successfully."
+  else
+    echo "rovodev config already updated or does not match expected format. Skipping."
+  fi
+fi
+
 cd ~/dotfiles && git reset --hard && git clean -fd && cd -
