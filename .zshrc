@@ -83,3 +83,5 @@ eval "$(zoxide init zsh)"
 
 # Set nvim as the default EDITOR
 export EDITOR=nvim
+
+export PATH="$HOME/.bun/bin:$PATH"
