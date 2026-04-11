@@ -56,24 +56,18 @@ brew_install neovim-remote
 brew_install tree-sitter-cli
 brew_install television
 brew_install bat
+brew tap oven-sh/bun && brew_install bun
 echo "Finished installing Homebrew packages"
 
 sleep 1
 
-echo "Reinstalling curl"
-brew uninstall --ignore-dependencies curl
-
-sleep 1
-
-sudo apt-get install curl
-
-# sleep 1
-
-# echo "Installing Rust nightly"
-#
-# rustup toolchain install nightly
-
-sleep 1
+if [[ "$(uname)" == "Linux" ]]; then
+  echo "Reinstalling curl"
+  brew uninstall --ignore-dependencies curl
+  sleep 1
+  sudo apt-get install curl
+  sleep 1
+fi
 
 # Install Oh my zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -90,6 +84,9 @@ if [ ! -d "$HOME/.config/nvim" ]; then
   sleep 1
 fi
 
+# Install JMUX
+bun install -g @jx0/jmux
+
 echo "Copying config files..."
 # Copy zshrc config
 cp -fL ~/dotfiles/.zshrc ~/.zshrc
@@ -105,7 +102,8 @@ rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL ~/dot
 rm -rf ~/.config/television/cable && mkdir -p ~/.config/television/cable && cp -RL ~/dotfiles/.config/television/cable ~/.config/television/cable
 cp -fL ~/dotfiles/.config/television/config.toml ~/.config/television/config.toml
 # Copy TMUX Config
-mkdir -p ~/.config/tmux && cp -fL ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+cp -fL ~/dotfiles/.tmux.conf ~/.tmux.conf
+# Copy powerlevel10k config
 cp -fL ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 echo "Finished copying files..."
 
