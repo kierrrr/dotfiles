@@ -44,7 +44,6 @@ brew_install fzf
 brew_install fd
 brew_install ripgrep
 brew_install delta
-brew_install sesh
 brew_install gnu-sed
 brew_install luarocks
 brew_install imagemagick
@@ -53,25 +52,16 @@ brew_install lazygit
 brew_install nvm
 brew_install zoxide
 brew_install neovim-remote
-brew_install tree-sitter-cli
 brew_install television
-brew_install bat
+brew_install jarredkenny/tap/jmux
+brew_install hunk
+
 echo "Finished installing Homebrew packages"
 
 sleep 1
 
-echo "Reinstalling curl"
-brew uninstall --ignore-dependencies curl
-
-sleep 1
-
-sudo apt-get install curl
-
-# sleep 1
-
-# echo "Installing Rust nightly"
-#
-# rustup toolchain install nightly
+# Install terminal-browser
+curl -fsSl https://terminal-browser.sh/install | bash
 
 sleep 1
 
@@ -105,7 +95,8 @@ rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL ~/dot
 rm -rf ~/.config/television/cable && mkdir -p ~/.config/television/cable && cp -RL ~/dotfiles/.config/television/cable ~/.config/television/cable
 cp -fL ~/dotfiles/.config/television/config.toml ~/.config/television/config.toml
 # Copy TMUX Config
-mkdir -p ~/.config/tmux && cp -fL ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+cp -fL ~/dotfiles/.tmux.conf ~/.tmux.conf
+# Copy p10k config
 cp -fL ~/dotfiles/.p10k.zsh ~/.p10k.zsh
 echo "Finished copying files..."
 
