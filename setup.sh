@@ -88,6 +88,8 @@ echo "Copying config files..."
 cp -fL "$DOTFILES_DIR/.zshrc" ~/.zshrc
 # Copy Lazygit config
 rm -rf ~/.config/lazygit && mkdir -p ~/.config && cp -RL "$DOTFILES_DIR/.config/lazygit" ~/.config/lazygit
+# Copy Hunk config
+rm -rf ~/.config/hunk && mkdir -p ~/.config && cp -RL "$DOTFILES_DIR/.config/hunk" ~/.config/hunk
 # Copy custom scripts
 rm -rf ~/.config/scripts && mkdir -p ~/.config && cp -RL "$DOTFILES_DIR/.config/scripts" ~/.config/scripts
 # Copy NVIM config

@@ -1,0 +1,10 @@
+theme = "tokyo-night"
+mode = "split"
+line_numbers = true
+wrap_lines = true
+hunk_headers = false
+menu_bar = true
+agent_notes = true
+copy_decorations = false
+cursor_line = "row"
+prompt_save_view_preferences = false
