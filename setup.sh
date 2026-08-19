@@ -1,6 +1,10 @@
 #!/bin/bash
+set -Eeo pipefail
 
-cd ~/dotfiles && git reset --hard && git clean -fd && cd -
+DOTFILES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+git -C "$DOTFILES_DIR" reset --hard
+git -C "$DOTFILES_DIR" clean -fd
 
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
@@ -20,14 +24,13 @@ if ! command -v brew &>/dev/null; then
   # Add eval "$(~/homebrew/bin/brew shellenv)" to .zprofile if it doesn't exist in the file
   grep -qxF 'eval "$(~/homebrew/bin/brew shellenv)"' ~/.zprofile || echo 'eval "$(~/homebrew/bin/brew shellenv)"' >>~/.zprofile
 
-  # Add eval "export PATH="$PATH:/homebrew/bin"" to .zprofile if it doesn't exist in the file
-  grep -qxF 'export PATH="$PATH:/homebrew/bin"' ~/.zprofile || echo 'export PATH="$PATH:/homebrew/bin"' >>~/.zprofile
-
   echo "Finished installing Homebrew"
 fi
 
-# Remove default Ubuntu Neovim
-echo "Y\n" | sudo apt-get --purge remove neovim
+# Remove distro-provided Neovim on Debian-based systems
+if command -v apt-get &>/dev/null; then
+  sudo apt-get --purge remove -y neovim
+fi
 
 sleep 1
 
@@ -44,7 +47,6 @@ brew_install fzf
 brew_install fd
 brew_install ripgrep
 brew_install delta
-brew_install sesh
 brew_install gnu-sed
 brew_install luarocks
 brew_install imagemagick
@@ -53,25 +55,16 @@ brew_install lazygit
 brew_install nvm
 brew_install zoxide
 brew_install neovim-remote
-brew_install tree-sitter-cli
 brew_install television
-brew_install bat
+brew_install jarredkenny/tap/jmux
+brew_install hunk
+
 echo "Finished installing Homebrew packages"
 
 sleep 1
 
-echo "Reinstalling curl"
-brew uninstall --ignore-dependencies curl
-
-sleep 1
-
-sudo apt-get install curl
-
-# sleep 1
-
-# echo "Installing Rust nightly"
-#
-# rustup toolchain install nightly
+# Install terminal-browser
+curl -fsSl https://terminal-browser.sh/install | bash
 
 sleep 1
 
@@ -92,21 +85,24 @@ fi
 
 echo "Copying config files..."
 # Copy zshrc config
-cp -fL ~/dotfiles/.zshrc ~/.zshrc
+cp -fL "$DOTFILES_DIR/.zshrc" ~/.zshrc
 # Copy Lazygit config
-rm -rf ~/.config/lazygit && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/lazygit ~/.config/lazygit
+rm -rf ~/.config/lazygit && mkdir -p ~/.config && cp -RL "$DOTFILES_DIR/.config/lazygit" ~/.config/lazygit
+# Copy Hunk config
+rm -rf ~/.config/hunk && mkdir -p ~/.config && cp -RL "$DOTFILES_DIR/.config/hunk" ~/.config/hunk
 # Copy custom scripts
-rm -rf ~/.config/scripts && mkdir -p ~/.config && cp -RL ~/dotfiles/.config/scripts ~/.config/scripts
+rm -rf ~/.config/scripts && mkdir -p ~/.config && cp -RL "$DOTFILES_DIR/.config/scripts" ~/.config/scripts
 # Copy NVIM config
 mkdir -p ~/.config/nvim
-rm -rf ~/.config/nvim/lua/config && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/config ~/.config/nvim/lua/config
-rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL ~/dotfiles/.config/nvim/lua/plugins ~/.config/nvim/lua/plugins
+rm -rf ~/.config/nvim/lua/config && mkdir -p ~/.config/nvim/lua && cp -RL "$DOTFILES_DIR/.config/nvim/lua/config" ~/.config/nvim/lua/config
+rm -rf ~/.config/nvim/lua/plugins && mkdir -p ~/.config/nvim/lua && cp -RL "$DOTFILES_DIR/.config/nvim/lua/plugins" ~/.config/nvim/lua/plugins
 # Copy Television config
-rm -rf ~/.config/television/cable && mkdir -p ~/.config/television/cable && cp -RL ~/dotfiles/.config/television/cable ~/.config/television/cable
-cp -fL ~/dotfiles/.config/television/config.toml ~/.config/television/config.toml
+rm -rf ~/.config/television/cable && mkdir -p ~/.config/television/cable && cp -RL "$DOTFILES_DIR/.config/television/cable" ~/.config/television/cable
+cp -fL "$DOTFILES_DIR/.config/television/config.toml" ~/.config/television/config.toml
 # Copy TMUX Config
-mkdir -p ~/.config/tmux && cp -fL ~/dotfiles/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
-cp -fL ~/dotfiles/.p10k.zsh ~/.p10k.zsh
+cp -fL "$DOTFILES_DIR/.tmux.conf" ~/.tmux.conf
+# Copy p10k config
+cp -fL "$DOTFILES_DIR/.p10k.zsh" ~/.p10k.zsh
 echo "Finished copying files..."
 
 sleep 1
@@ -122,28 +118,19 @@ fi
 if [ ! -d ~/.tmux/plugins/tpm ]; then
   echo "Installing Tmux Plugin Manager..."
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-  sleep 1
 fi
 
-if [ ! -d ~/.config/tmux/plugins/tpm ]; then
-  echo "Installing TPM Plugins"
-  tmux start-server
-  tmux new-session -d
-  sleep 1
-  eval "$(~/.tmux/plugins/tpm/scripts/install_plugins.sh)"
-  tmux kill-server
-  sleep 1
-fi
-
-# Change default shell to zsh. This should be last step.
-if [ "$SHELL" != "$(which zsh)" ]; then
-  echo "Changing default shell to zsh..."
-  source /etc/zsh/zshenv
-  sudo chsh -s "$(which zsh)" ubuntu
-  zsh
-fi
+echo "Installing Tmux plugins..."
+"$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
 # Set nvim as the default editor for git
 git config --global core.editor "nvim"
 
-cd ~/dotfiles && git reset --hard && git clean -fd && cd -
+# Change default shell to zsh. This should be last step.
+if [ "$SHELL" != "$(command -v zsh)" ]; then
+  echo "Changing default shell to zsh..."
+  chsh -s "$(command -v zsh)"
+fi
+
+git -C "$DOTFILES_DIR" reset --hard
+git -C "$DOTFILES_DIR" clean -fd
