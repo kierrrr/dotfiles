@@ -63,6 +63,14 @@ echo "Finished installing Homebrew packages"
 
 sleep 1
 
+# Linux is not compatible with homebrew curl
+echo "Reinstalling curl"
+brew uninstall --ignore-dependencies curl
+
+sleep 1
+
+sudo apt-get install curl
+
 # Install terminal-browser
 curl -fsSl https://terminal-browser.sh/install | bash
 
